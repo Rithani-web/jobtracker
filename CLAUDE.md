@@ -28,9 +28,7 @@ There is no unit-test runner. Verification is script-based (`node supabase/scrip
 
 Playwright QA (throwaway, expects the app on `BASE_URL`, default `http://localhost:3100`): `node qa-artifacts/qa-test.mjs`.
 
-`backend/` and `frontend/` are separate npm projects with their own scripts — see "Standalone sub-projects" below.
-
-**Environment files:** root `.env.local` holds `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` (plus `DATABASE_URL`, used only by the SQL-injection demo route). `supabase/.env.local` holds `SUPABASE_DB_URL` and credentials for the scripts. Never print or commit secret values.
+**Environment files:** root `.env.local` holds `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY`. `supabase/.env.local` holds `SUPABASE_DB_URL` and credentials for the scripts. Never print or commit secret values.
 
 ## Architecture
 
@@ -43,27 +41,14 @@ Playwright QA (throwaway, expects the app on `BASE_URL`, default `http://localho
 
 **Domain vocabulary** — `src/lib/domain.ts` is the single source for status / interview-type / outcome enums (plain DB strings, validated in app code with `isStatus` etc.), date formatting/parsing helpers, and the shared Tailwind class tokens (`cardClass`, `btnPrimary`, `inputClass`, badge helpers). Reuse these tokens instead of restyling inline.
 
-**Routes** — dashboard (`page.tsx`), `/applications` + `/applications/[id]` (with timeline), `/contacts`, `/follow-ups`, `/login`. API: `/api/applications` (safe, parameterized), `/api/notifications`, and `/api/sql-injection-demo` — the latter is **deliberately vulnerable** (direct `pg` connection as DB owner, bypassing RLS) for local security learning only; never deploy it or rename it to look real.
+**Routes** — dashboard (`page.tsx`), `/applications` + `/applications/[id]` (with timeline), `/contacts`, `/follow-ups`, `/login`. API: `/api/applications` (safe, parameterized) and `/api/notifications`.
 
 **Schema** — four tables (`applications`, `interviews`, `contacts`, `follow_ups`), RLS-scoped to the owning user. Applications use soft-archive (`archived_at`, migration `0002`): archived rows leave the Active list but keep counting in dashboard metrics and keep their children. Migration `0003` adds `notifications` (surfaced by the header bell via `/api/notifications`).
 
 **No `loading.tsx` files, deliberately** — route-level `loading.tsx` breaks `notFound()` HTTP status behavior (pages would 200 with a skeleton instead of 404). Do not add them.
 
-## Standalone sub-projects
-
-`backend/` and `frontend/` are independent npm projects next to the Next.js app — they install their own dependencies and share no runtime, schema, or auth with it (no Supabase; JWT + direct `pg` instead).
-
-**`backend/`** — Express 5 + TypeScript + PostgreSQL (`pg`) + JWT API:
-- Scripts (run inside `backend/`): `dev` (`tsx watch`), `build` (`tsc` → `dist/`, emits declarations + maps), `start` (`node dist/index.js`), `type-check` (note the hyphen).
-- Entry: `src/index.ts` imports `src/server.ts`, which assembles the app (dotenv → cors → `express.json()` → routes) and listens on `PORT` (fallback 4000 — avoids the Next app on 3000, QA on 3100, Vite on 5173). `GET /health` returns JSON status.
-- `tsconfig.json`: full strict set, ES2020 / commonjs. `backend/.env.example` documents `DATABASE_URL`, `PORT`, `JWT_SECRET`, `CLAUDE_API_KEY`.
-- `backend/.gitignore` covers `node_modules/`, `dist/`, `.env` — the root `.gitignore` rules are root-anchored and do not apply to subdirectories.
-
-**`frontend/`** — React 18 + TypeScript SPA: Vite 6, Redux Toolkit + react-redux, Tailwind v4 via `@tailwindcss/vite` (no `tailwind.config.js`/PostCSS). Scripts: `dev` / `build` (`tsc -b && vite build`) / `preview` / `typecheck`. Currently manifest + lockfile only — no source scaffolded yet.
-
 ## Other directories
 
-- `teamsync/` — planning docs for a separate product (TeamSync). Docs only; no code, no shared runtime with this app.
 - `mcp-server/` — `jobtracker-mcp`, a TypeScript stdio MCP server exposing JobTracker data as tools; queries Postgres directly via `pg` over the Supabase session pooler (see the TLS workaround note in its connection config — a known quirk of that pooler's cert chain, worth properly trusting the chain instead). Scoped to one user via `MCP_USER_EMAIL`. Build with `npm run build`; `smoke.mjs` exercises the tools.
 - `my-mcp-server/` — Python MCP server scratch copy (learning).
 - `plugin/` + `.claude-plugin/` — Claude Code plugin packaging: hooks plus the `jobtracker-plugin` skills (job-review, scope-a-feature, weekly-summary, frontend-design).

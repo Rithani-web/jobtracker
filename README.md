@@ -50,6 +50,6 @@ Seeded demo users: `user1..8@seed.jobtracker.test`, password `Password123!`.
 - `src/lib/` — domain enums, form parsing, Supabase clients
 - `supabase/` — migrations and verification scripts
 
-## Security note
+## Deployment
 
-`src/app/api/sql-injection-demo` is a **deliberately vulnerable** route for local security learning only. It bypasses RLS by connecting as the DB owner. Do not deploy it.
+Not deployed yet. Before deploying: set `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` on the host and add the deployed domain to Supabase Auth's allowed redirect URLs.
