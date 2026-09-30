@@ -1,0 +1,79 @@
+// JobTracker database schema.
+// NOTE: SQLite does not support enums, so "choice" fields are Strings.
+// The allowed values are documented next to each field and enforced in app code.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// One row per job the user is tracking.
+model Application {
+  id          Int      @id @default(autoincrement())
+  company     String
+  role        String
+  // Saved | Applied | Interviewing | Offer | Rejected | Withdrawn
+  status      String   @default("Saved")
+  appliedDate DateTime?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  interviews Interview[]
+  followUps  FollowUp[]
+  contacts   Contact[]
+
+  @@map("applications")
+}
+
+// One row per interview for an application.
+model Interview {
+  id            Int       @id @default(autoincrement())
+  applicationId Int
+  scheduledAt   DateTime
+  // PhoneScreen | Technical | Behavioral | Onsite | Final | Other
+  type          String    @default("Other")
+  // Pending | Passed | Rejected
+  outcome       String    @default("Pending")
+  notes         String?
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("interviews")
+}
+
+// A person in the process: recruiter, referrer, interviewer, ...
+model Contact {
+  id      Int     @id @default(autoincrement())
+  name    String
+  company String?
+  email   String?
+  phone   String?
+  notes   String?
+
+  // Optional link: "the recruiter for this application".
+  applicationId Int?
+  application   Application? @relation(fields: [applicationId], references: [id], onDelete: SetNull)
+
+  @@map("contacts")
+}
+
+// A task to do for an application, e.g. "send thank-you email".
+model FollowUp {
+  id            Int      @id @default(autoincrement())
+  applicationId Int
+  dueDate       DateTime
+  done          Boolean  @default(false)
+  note          String?
+
+  application Application @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+
+  @@index([applicationId])
+  @@map("follow_ups")
+}

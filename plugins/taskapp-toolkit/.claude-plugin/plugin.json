@@ -1,0 +1,32 @@
+{
+  "name": "taskapp-toolkit",
+  "version": "1.0.0",
+  "description": "Commands, agents, hooks, and skills for JobTracker and TeamSync development",
+  "author": {
+    "name": "pdm-LMC"
+  },
+  "commands": [
+    "./commands/new-endpoint.md",
+    "./commands/review/security.md",
+    "./commands/run-tests.md"
+  ],
+  "agents": [
+    "./agents/api-designer.md",
+    "./agents/app-health-checker.md",
+    "./agents/code-reviewer.md",
+    "./agents/db-migrator.md",
+    "./agents/job-reviewer.md",
+    "./agents/test-writer.md"
+  ],
+  "skills": [
+    "./skills/api-conventions",
+    "./skills/frontend-design",
+    "./skills/job-review",
+    "./skills/scope-a-feature",
+    "./skills/teamsync-deploy",
+    "./skills/update-claude-md"
+  ],
+  "hooks": [
+    "./hooks/hooks.json"
+  ]
+}

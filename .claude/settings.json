@@ -1,0 +1,25 @@
+{
+  "model": "sonnet",
+  "includeCoAuthoredBy": true,
+  "permissions": {
+    "allow": [
+      "Read(./**)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(npm run *)"
+    ],
+    "deny": [
+      "Read(./**/.env*)",
+      "Read(./.env*)"
+    ]
+  },
+  "env": {
+    "BASH_DEFAULT_TIMEOUT_MS": "120000",
+    "BASH_MAX_TIMEOUT_MS": "600000"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "node .claude/statusline.js"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "jobtracker-local",
+  "owner": {
+    "name": "pdm-LMC"
+  },
+  "metadata": {
+    "description": "Local marketplace for JobTracker project plugins",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "jobtracker-plugin",
+      "description": "Custom skills and hooks for JobTracker",
+      "source": "./plugin"
+    },
+    {
+      "name": "taskapp-toolkit",
+      "description": "Commands, agents, hooks, and skills for JobTracker and TeamSync development",
+      "source": "./plugins/taskapp-toolkit"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "timestamp": "2026-09-25T05:36:07.375Z",
+  "notificationsLeftAfterCleanup": 0,
+  "results": [
+    {
+      "name": "login via UI lands on dashboard",
+      "status": "PASS",
+      "ms": 3488
+    },
+    {
+      "name": "badge shows 2 unread after sync",
+      "status": "PASS",
+      "ms": 2343
+    },
+    {
+      "name": "panel lists both reminders with chips",
+      "status": "PASS",
+      "ms": 176
+    },
+    {
+      "name": "clicking the interview item marks read + navigates",
+      "status": "PASS",
+      "ms": 2675
+    },
+    {
+      "name": "mark all read clears the badge",
+      "status": "PASS",
+      "ms": 1128
+    },
+    {
+      "name": "dismiss removes the row from the panel",
+      "status": "PASS",
+      "ms": 45
+    },
+    {
+      "name": "PATCH {all:true} via API reports unreadCount 0",
+      "status": "PASS",
+      "ms": 1220
+    },
+    {
+      "name": "prune: completing the follow-up removes its notification",
+      "status": "PASS",
+      "ms": 2764
+    }
+  ],
+  "consoleErrors": []
+}

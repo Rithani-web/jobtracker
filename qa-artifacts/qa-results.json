@@ -1,0 +1,42 @@
+{
+  "baseUrl": "http://localhost:3100",
+  "timestamp": "2026-09-23T08:53:53.789Z",
+  "results": [
+    {
+      "name": "1a. /login renders for anonymous visitor",
+      "status": "PASS",
+      "ms": 173
+    },
+    {
+      "name": "1b. Login with demo user lands on dashboard",
+      "status": "PASS",
+      "ms": 2006
+    },
+    {
+      "name": "2a. Applications list renders with add form",
+      "status": "PASS",
+      "ms": 809
+    },
+    {
+      "name": "2b. Create application → redirected to detail page",
+      "status": "PASS",
+      "ms": 1413
+    },
+    {
+      "name": "3. Edit application → changes persist on page",
+      "status": "PASS",
+      "ms": 1181
+    },
+    {
+      "name": "4. Delete application → gone from list",
+      "status": "PASS",
+      "ms": 1419
+    },
+    {
+      "name": "5. Logout returns to /login",
+      "status": "PASS",
+      "ms": 569
+    }
+  ],
+  "consoleErrors": []
+}
